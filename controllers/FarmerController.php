@@ -56,11 +56,9 @@ class FarmerController extends Controller
     }
    
     public function actionView($id)
-    {   
-        $model = Farmer::findOne($id);
-    
+    {
         return $this->render('view', [
-            'model' => $model,
+            'model' => $this->findModel($id),
         ]);
     }
 

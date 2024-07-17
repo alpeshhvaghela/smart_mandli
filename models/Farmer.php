@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use PhpParser\Node\Expr\Cast;
 use Yii;
 use yii\data\ActiveDataProvider;
 
@@ -142,4 +143,17 @@ class Farmer extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Cities::className(),['id'=>'city_id']);
     }
+    public function getSex()
+    {
+        return $this->hasOne(Sex::className(),['id'=>'sex_id']);
+    }
+    public function getFarmertype()
+    {
+        return $this->hasOne(Farmertype::className(),['id'=>'farm_type_id']);
+    }
+    public function getCast()
+    {
+        return $this->hasOne(Caste::className(),['id'=>'cast_id']);
+    }
+    
 }

@@ -27,17 +27,6 @@ use yii\widgets\Pjax;
                 [
                     'label' => 'City',
                     'attribute' => 'city_id',
-                    // 'filter' => Select2::widget([
-                    //     'name' => 'city[district_id]',
-                    //     'value' => $searchModel->district_id,
-                    //     'data' => Cities::getDistricts(),
-                    //     'options' => [
-                    //         'placeholder' => 'જિલ્લો'
-                    //     ],
-                    //     'pluginOptions' => [
-                    //         'allowClear' => true
-                    //     ]
-                    // ]),
                     'value' => function($data) {
                         return $data->city->name;
                     }

@@ -116,5 +116,5 @@ class Cities extends \yii\db\ActiveRecord
         }
         return ArrayHelper::map(Cities::find()->all(), 'id', 'name');
     }
-    
+
 }

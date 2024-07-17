@@ -99,9 +99,6 @@ $form = ActiveForm::begin([
     </div>
     <div class="row mb-4">
         <div class="col-4">
-            <?php echo $form->field($model, 'mobile_number')->textInput(['inputmode' => 'text', 'lang' => 'en-US',]); ?>
-        </div>
-        <div class="col-4">
             <?php
             echo $form->field($model, 'birth_date')->widget(DateControl::classname(), [
                 'type' => DateControl::FORMAT_DATE,
@@ -118,6 +115,19 @@ $form = ActiveForm::begin([
             <?php
             //echo $form->field($model, 'joining_date')->widget(DateControl::classname());
             echo $form->field($model, 'joining_date')->widget(DateControl::classname(), [
+                'type' => DateControl::FORMAT_DATE,
+                'ajaxConversion' => false,
+                'widgetOptions' => [
+                    'pluginOptions' => [
+                        'autoclose' => true
+                    ]
+                ]
+            ]); 
+            ?>
+        </div>
+        <div class="col-4">
+            <?php 
+            echo $form->field($model, 'regi_date')->widget(DateControl::classname(), [
                 'type' => DateControl::FORMAT_DATE,
                 'ajaxConversion' => false,
                 'widgetOptions' => [
@@ -188,11 +198,14 @@ $form = ActiveForm::begin([
         </div>
     </div>
     <div class="row mb-4">
-        <div class="col-6">
+        <div class="col-4">
             <?php echo $form->field($model, 'addhar_card_no')->textInput([]); ?>
         </div>
-        <div class="col-6">
+        <div class="col-4">
             <?php echo $form->field($model, 'voter_id_no')->textInput([]); ?>
+        </div>
+        <div class="col-4">
+            <?php echo $form->field($model, 'mobile_number')->textInput(['inputmode' => 'text', 'lang' => 'en-US',]); ?>
         </div>
     </div>
 </div>
