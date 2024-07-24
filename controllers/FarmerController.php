@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 
 use app\models\Farmer;
+use Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -54,6 +55,20 @@ class FarmerController extends Controller
             'model' => $model,
         ]);
     }
+
+    public function actionDelete($id)
+    {
+        $model = Farmer::find()->where(['id' => $id])->one();
+        try {
+            $model->is_deleted = true;
+            $model->update(false);
+            Yii::$app->session->setFlash('success', 'User deleted successfully');
+        } catch (Exception $e) {
+            Yii::$app->session->setFlash('error', 'Some error is there.');
+        }
+        return $this->redirect(['index']);
+    }
+
    
     public function actionView($id)
     {
@@ -69,5 +84,62 @@ class FarmerController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionNext($id)
+    {
+        $currentRecord = Farmer::findOne($id);
+        if ($currentRecord) {
+            $nextRecord = $currentRecord->getNextRecord();
+            if ($nextRecord) {
+                return $this->redirect(['view', 'id' => $nextRecord->id]);
+            }
+        }
+
+        Yii::$app->session->setFlash('error', 'This is the last record.');
+        return $this->redirect(['view', 'id' => $id]);
+    }
+
+    public function actionLast()
+    {
+        $lastFarmer = Farmer::find()->orderBy(['id' => SORT_DESC])->one();
+
+        if ($lastFarmer === null) {
+            throw new NotFoundHttpException('No farmer found.');
+        }
+
+        // Render a view or return data
+        return $this->render('view', [
+            'model' => $lastFarmer,
+        ]);
+    }
+
+    
+    public function actionPrevious($id)
+    {
+        $currentRecord = Farmer::findOne($id);
+        if ($currentRecord) {
+            $previousRecord = $currentRecord->getPreviousRecord();
+            if ($previousRecord) {
+                return $this->redirect(['view', 'id' => $previousRecord->id]);
+            }
+        }
+
+        Yii::$app->session->setFlash('error', 'This is the first record.');
+        return $this->redirect(['view', 'id' => $id]);
+    }
+
+    public function actionFirst()
+    {
+        $lastFarmer = Farmer::find()->orderBy(['id' => SORT_ASC])->one();
+
+        if ($lastFarmer === null) {
+            throw new NotFoundHttpException('No farmer found.');
+        }
+
+        // Render a view or return data
+        return $this->render('view', [
+            'model' => $lastFarmer,
+        ]);
     }
 }

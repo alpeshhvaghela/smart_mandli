@@ -1,0 +1,14 @@
+.hdr {
+    height: 65px;
+    display: flex;
+    align-items: center;
+
+}
+
+.fr-v {
+    width: 181px;
+    height: 40px;
+}
+.hdr h2{
+    margin-left: 6px;
+}

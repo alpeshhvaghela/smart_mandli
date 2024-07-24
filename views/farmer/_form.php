@@ -155,7 +155,7 @@ $form = ActiveForm::begin([
             <?php
             echo $form->field($model, 'sex_id')->widget(Select2::classname(), [
                 'data' => $sex,
-                'options' => ['placeholder' => 'સ્ત્રી અથવા પુરુષ પસંદ કરો '],
+                'options' => ['placeholder' => 'Select Gender'],
                 'pluginOptions' => [
                     'allowClear' => true,
                     'selectOnClose' => true
@@ -167,7 +167,7 @@ $form = ActiveForm::begin([
             <?php
             echo $form->field($model, 'cast_id')->widget(Select2::classname(), [
                 'data' => $cast,
-                'options' => ['placeholder' => 'જાતી પસંદ કરો '],
+                'options' => ['placeholder' => 'Select Caste'],
                 'pluginOptions' => [
                     'allowClear' => true,
                     'selectOnClose' => true
@@ -202,7 +202,7 @@ $form = ActiveForm::begin([
             <?php echo $form->field($model, 'addhar_card_no')->textInput([]); ?>
         </div>
         <div class="col-4">
-            <?php echo $form->field($model, 'voter_id_no')->textInput([]); ?>
+            <?php echo $form->field($model, 'voter_id_no')->textInput(["class" => "text-uppercase"]); ?>
         </div>
         <div class="col-4">
             <?php echo $form->field($model, 'mobile_number')->textInput(['inputmode' => 'text', 'lang' => 'en-US',]); ?>

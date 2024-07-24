@@ -28,8 +28,7 @@
         "kartik-v/yii2-mpdf": "*",
         "yiisoft/yii2-jui": "^2.0",
         "bower-asset/jquery": "^3.7",
-        "cetver/yii2-language-selector": "^1.0",
-        "kartik-v/yii2-detail-view": "dev-master"
+        "cetver/yii2-language-selector": "^1.0"
 
     },
     "require-dev": {

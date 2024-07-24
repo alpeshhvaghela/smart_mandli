@@ -2,9 +2,12 @@
 
 namespace app\models;
 
+use Mpdf\Container\NotFoundException;
 use PhpParser\Node\Expr\Cast;
+use PhpParser\Node\Stmt\Return_;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "farmer".
@@ -58,13 +61,15 @@ class Farmer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'father_name', 'last_name'], 'required'],
+            [['name', 'father_name', 'last_name', 'district_id', 'taluka_id', 'city_id'], 'required'],
             [['district_id', 'taluka_id', 'city_id', 'is_deleted', 'sex_id', 'farm_type_id', 'cast_id', 'tharav_no', 'sav_ac_no', 'emp_cif_no', 'emp_cif1_no', 'tkcc_short', 'tkishan_su', 'tmadhyamudat_m', 'tgowndown_mm', 'tjlg_grp', 'other_cd1', 'tkkc_3L', 'pasu_loan', 'kisan_mitra', 'addhar_card_no'], 'integer'],
             [['name', 'father_name', 'last_name'], 'string', 'max' => 255],
             [['mobile_number'], 'string', 'max' => 12],
             [['birth_date', 'joining_date', 'regi_date', 'tharav_date'], 'string', 'max' => 50],
             [['pan_card', 'voter_id_no'], 'string', 'max' => 16],
-            [['birth_date','joining_date','regi_date','tharav_date'],'safe']
+            [['birth_date', 'joining_date', 'regi_date', 'tharav_date'], 'safe'],
+            //[['sav_ac_no', 'emp_cif_no', 'emp_cif1_no', 'tkcc_short', 'tkishan_su', 'tmadhyamudat_m', 'tgowndown_mm', 'tjlg_grp', 'other_cd1', 'tkkc_3L', 'pasu_loan', 'kisan_mitra'],min ]
+
         ];
     }
 
@@ -85,7 +90,7 @@ class Farmer extends \yii\db\ActiveRecord
             'birth_date' => 'Birth Date',
             'joining_date' => 'Joining Date',
             'regi_date' => 'Registration Date',
-            'sex_id' => 'Sex',
+            'sex_id' => 'Gender',
             'farm_type_id' => 'Farm Type ',
             'cast_id' => 'Cast ',
             'tharav_date' => 'Tharav Date',
@@ -109,24 +114,25 @@ class Farmer extends \yii\db\ActiveRecord
     }
     public function search()
     {
-         $query = Farmer::find();
+        $query = Farmer::find();
         $query->andFilterWhere(["LIKE", "name",  $this->name]);
-        if (!empty($this->taluka_id)) {
-            $query->andWhere(["taluka_id" => $this->taluka_id]);
+        if (!empty($this->father_name)) {
+            $query->andWhere(["father_name" => $this->father_name]);
         }
-        if (!empty($this->district_id)) {
-            $query->andWhere(["district_id" => $this->district_id]);
+        if (!empty($this->last_name)) {
+            $query->andWhere(["last_name" => $this->last_name]);
         }
+
         return new ActiveDataProvider([
             'query' => $query,
             'sort' => ['defaultOrder' => [
                 'id' => 'DESC'
-            ]],   
+            ]],
             'pagination' => [
                 'pageSize' => 40,
-                
+
             ],
-            
+
         ]);
     }
     public function getdistrict()
@@ -141,19 +147,52 @@ class Farmer extends \yii\db\ActiveRecord
 
     public function getCity()
     {
-        return $this->hasOne(Cities::className(),['id'=>'city_id']);
+        return $this->hasOne(Cities::className(), ['id' => 'city_id']);
     }
     public function getSex()
     {
-        return $this->hasOne(Sex::className(),['id'=>'sex_id']);
+        return $this->hasOne(Sex::className(), ['id' => 'sex_id']);
     }
     public function getFarmertype()
     {
-        return $this->hasOne(Farmertype::className(),['id'=>'farm_type_id']);
+        return $this->hasOne(Farmertype::className(), ['id' => 'farm_type_id']);
     }
-    public function getCast()
+    public function getCaste()
     {
-        return $this->hasOne(Caste::className(),['id'=>'cast_id']);
+        return $this->hasOne(Caste::className(), ['id' => 'cast_id']);
     }
-    
+    public function getNextRecord()
+    {
+        return self::find()
+            ->where(['>', 'id', $this->id])
+            ->orderBy('id ASC')
+            ->one();
+    }
+
+    public function getPreviousRecord()
+    {
+        return self::find()
+            ->where(['<', 'id', $this->id])
+            ->orderBy('id DESC')
+            ->one();
+    }
+
+    public function getFirst()
+    {
+        $firstFarmer = self::find()->orderBy(['id' => SORT_ASC])->one();
+
+        if ($firstFarmer === null) {
+            throw new NotFoundException('No farmer found.');
+        }
+        return $firstFarmer;
+    }
+    public function getLast()
+    {
+        $lastFarmer = self::find()->orderBy(['id' => SORT_DESC])->one();
+
+        if ($lastFarmer === null) {
+            throw new NotFoundException('No farmer found.');
+        }
+        return $lastFarmer;
+    }
 }

@@ -1,25 +1,32 @@
 <?php
 
-use app\models\Talukas;
-use kartik\select2\Select2;
 use yii\grid\GridView;
+use yii\helpers\Html;
 use yii\widgets\Pjax;
 
 ?>
 
+<style>
+.headerindex{
+    height: 45px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 5px;
+}   
+</style>
+
 <div class="card">
     <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="card-title">City/village</h5>
+        <div class="d-flex justify-content-between align-items-center  headerindex">
+            <h5 class="card-title">Farmers</h5>
             <?php echo yii\helpers\Html::a('Create Farmer', ["farmer/create"], ['class' => 'btn btn-sm btn-primary mr-2']); ?>
         </div>
         <?php 
         Pjax::begin(); 
         echo GridView::widget([
             'dataProvider' => $dataProvider,
-            // 'filterModel' => $searchModel,
+            'filterModel' => $searchModel,
             'columns' => [
-             
                 'id',
                 'name',
                 'father_name',
@@ -27,25 +34,13 @@ use yii\widgets\Pjax;
                 [
                     'label' => 'City',
                     'attribute' => 'city_id',
-                    'value' => function($data) {
-                        return $data->city->name;
+                    'value' => function($dataProvider) {
+                        return $dataProvider->city->name;
                     }
                 ],
                 [
                     'label' => 'Taluka',
                     'attribute' => 'taluka_id',
-                    'filter' => Select2::widget([
-                        'name' => 'city[taluka_id]',
-                        'value' => $searchModel->taluka_id,
-                        
-                        'data' => Talukas::getTalukas(),
-                        'options' => [
-                            'placeholder' => 'તાલુકો'
-                        ],
-                        'pluginOptions' => [
-                            'allowClear' => true
-                        ]
-                    ]),
                     'value' => function($data) {
                         return $data->taluka->name;
                     }
@@ -53,30 +48,35 @@ use yii\widgets\Pjax;
                 [
                     'label' => 'District',
                     'attribute' => 'district_id',
-                    // 'filter' => Select2::widget([
-                    //     'name' => 'city[district_id]',
-                    //     'value' => $searchModel->district_id,
-                    //     'data' => Cities::getDistricts(),
-                    //     'options' => [
-                    //         'placeholder' => 'જિલ્લો'
-                    //     ],
-                    //     'pluginOptions' => [
-                    //         'allowClear' => true
-                    //     ]
-                    // ]),
                     'value' => function($data) {
                         return $data->district->name;
                     }
                 ],
+                'mobile_number',
+                'birth_date',
+                'joining_date',
                 [
-                    'class' => 'yii\grid\ActionColumn',
-                    'template' => '{view} {update} {Delete}',
-                    'header' => 'Action',
-                    'headerOptions' => ['class' => 'text-center'],
-                    'contentOptions' => ['class' => 'col-1 text-center'],
+                    'attribute' => 'sex_id',
+                    'value' => function($data) {
+                        return $data->sex->name;
+                    }
+                ],
+                [
+                    'attribute' => 'farm_type_id',
+                    'value' => function($data) {
+                        return $data->farmertype->name;
+                    }
+                ],
+                [
+                    'attribute' => 'cast_id',
+                    'value' => function($data) {
+                        return $data->caste->name;
+                    }
                 ],
             ],
-        ]);
+        ],
+        
+    );
         Pjax::end();
         ?>
     </div>
